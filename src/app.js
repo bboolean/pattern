@@ -111,12 +111,17 @@ const circles = (ctx) => {
   }
 };
 
-const renderCanvas = () => {
+const renderCanvas = (args) => {
   setTimeout(() => {
     const canvas = document.getElementById('canvas');
 
     const ctx = canvas.getContext('2d');
-    circles(ctx);
+
+    if ('circles' === args?.type) {
+      circles(ctx);
+    } else {
+      gradient(ctx);
+    }
   });
 };
 
@@ -124,6 +129,8 @@ export function App() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  // const [open, setOpen] = useState({});
 
   useEffect(() => {
     renderCanvas();
@@ -180,23 +187,31 @@ export function App() {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <Grid container>
-              <Grid>
+            <Grid container direction={'row'}>
+              <Grid sx={{ width: w }}>
                 <canvas
                   id="canvas"
                   width={w}
                   height={h}
                 ></canvas>
               </Grid>
-              <Grid xs={8}>
-                <TextField
-                  id="outlined-disabled"
-                  defaultValue="Hello World"
-                />
-                <TextField
-                  id="outlined-disabled"
-                  defaultValue="Hello World"
-                />
+              <Grid xs>
+                <Grid container columnGap={3}>
+                  <Grid xs={12}>
+                    <TextField
+                      id="outlined-disabled"
+                      defaultValue="Hello World"
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid xs={12}>
+                    <TextField
+                      id="outlined-disabled"
+                      defaultValue="Hello World"
+                      fullWidth
+                    />
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </Box>
