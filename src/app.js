@@ -13,12 +13,70 @@ import TextField from '@mui/material/TextField';
 import InboxIcon from '@mui/icons-material/Inbox';
 import DraftsIcon from '@mui/icons-material/Drafts';
 
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, {
+  SelectChangeEvent,
+} from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
+import { create } from 'zustand';
+import { render } from 'react-dom';
+import { TryOutlined } from '@mui/icons-material';
+
+const defaultForm = {
+  type: 'Circles',
+};
+
+const useStore = create((set) => ({
+  modals: {},
+  form: defaultForm,
+  list: {},
+  nextIndex: 0,
+  update: (category, name, value) =>
+    set((state) => ({
+      [category]: {
+        ...state?.[category],
+        [name]: value,
+      },
+    })),
+  newForm: () =>
+    set((state) => ({
+      form: defaultForm,
+      modals: {
+        ...state.modals,
+        editBox: true,
+      },
+    })),
+  save: () =>
+    set((state) => ({
+      list: {
+        ...state.list,
+        [state.nextIndex]: {
+          ...state.form,
+          id: state.nextIndex,
+        },
+      },
+      nextIndex: 1 + state.nextIndex,
+      modals: {
+        ...state.modals,
+        editBox: false,
+      },
+    })),
+  open: (item) =>
+    set((state) => ({
+      form: item,
+      modals: {
+        ...state.modals,
+        editBox: TryOutlined,
+      },
+    })),
+}));
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -124,7 +182,7 @@ const drawDiamond = (ctx, half, size, offsetx, offsety) => {
     ctx.fillRect(x + offsetx, y + offsety, 10, 10);
     ctx.fillRect(
       x + offsetx,
-      floorToTen(size - y) + offsety,
+      floorToTen(size - y) + offsety - size * 2.5,
       10,
       10
     );
@@ -145,7 +203,7 @@ const diamonds = (ctx) => {
     for (
       let offsety = -unit * 6 - 5;
       offsety < unit * 6;
-      offsety += unit * 2
+      offsety += unit * 2.1
     ) {
       ctx.fillStyle = hslToHex(
         offsetx / (w / 100),
@@ -163,110 +221,144 @@ const diamonds = (ctx) => {
   }
 };
 
-const renderCanvas = (args) => {
-  setTimeout(() => {
-    const canvas = document.getElementById('canvas');
-
-    const ctx = canvas.getContext('2d');
-
-    if ('circles' === args?.type) {
-      circles(ctx);
-    } else {
-      diamonds(ctx);
-    }
-  });
+const types = {
+  Circles: circles,
+  Diamonds: diamonds,
 };
 
-export function App() {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+const renderCanvas = (form) => {
+  const canvas = document.getElementById('canvas');
 
-  // const [open, setOpen] = useState({});
+  const ctx = canvas.getContext('2d');
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  types?.[form?.type]?.(ctx);
+};
+
+export function InnerModal() {
+  const state = useStore((state) => state);
+  const editBoxModal = useStore(
+    (state) => state?.modals?.editBox
+  );
+  const form = useStore((state) => state?.form);
+  const save = useStore((state) => state?.save);
+  const update = useStore((state) => state.update);
 
   useEffect(() => {
-    renderCanvas();
-  }, []);
+    renderCanvas(form);
+  }, [form]);
+
+  return (
+    <Box sx={style} onLoad={() => console.log('a')}>
+      <Grid container direction={'row'}>
+        <Grid sx={{ width: w }}>
+          <canvas id="canvas" width={w} height={h}></canvas>
+        </Grid>
+        <Grid xs>
+          <Grid container columnGap={3}>
+            <Grid xs={12}>
+              <InputLabel id="demo-simple-select-label">
+                Type
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={form?.type ?? 'Circles'}
+                label="Type"
+                onChange={(e) => {
+                  update('form', 'type', e.target.value);
+                }}
+              >
+                {['Circles', 'Diamonds', 'Crosses'].map(
+                  (t) => (
+                    <MenuItem value={t}>{t}</MenuItem>
+                  )
+                )}
+              </Select>
+              <TextField
+                id="outlined-disabled"
+                defaultValue="Hello World"
+                fullWidth
+                onChange={(e) =>
+                  update('form', 'first', e.target.value)
+                }
+              />
+            </Grid>
+            <Grid xs={12}>
+              <TextField
+                id="outlined-disabled"
+                defaultValue="Hello World"
+                fullWidth
+              />
+              {JSON.stringify(state)}{' '}
+              <Button
+                onClick={() => {
+                  update('modals', 'editBox', false);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  save();
+                }}
+              >
+                Save
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+}
+
+export function App() {
+  const state = useStore((state) => state);
+  const editBoxModal = useStore(
+    (state) => state?.modals?.editBox
+  );
+  const editField = useStore((state) => state.editField);
+  const update = useStore((state) => state.update);
+  const list = useStore((state) => state.list);
+
+  const newForm = useStore((state) => state.newForm);
 
   return (
     <>
       <CssBaseline />
       <Container maxWidth="lg">
         <Box sx={{ bgcolor: '#cfe8fc', height: '100vh' }}>
+          <Button
+            onClick={() => {
+              newForm();
+            }}
+          >
+            New
+          </Button>
           <nav aria-label="main mailbox folders">
             <List>
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <InboxIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Inbox" />
-                </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <DraftsIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Drafts" />
-                </ListItemButton>
-              </ListItem>
-            </List>
-          </nav>
-          <Divider />
-          <nav aria-label="secondary mailbox folders">
-            <List>
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemText primary="Trash" />
-                </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton
-                  component="a"
-                  href="#simple-list"
-                >
-                  <ListItemText primary="Spam" />
-                </ListItemButton>
-              </ListItem>
+              {Object.values(list ?? {}).map((item) => (
+                <ListItem disablePadding>
+                  <ListItemButton
+                    onClick={() => open(item)}
+                  >
+                    <ListItemIcon>
+                      <DraftsIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={item.type} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
             </List>
           </nav>
         </Box>
         <Modal
-          open={true}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
+          open={editBoxModal ?? false}
+          // onClose={() => update('modals', 'editBox', false)}
         >
-          <Box sx={style}>
-            <Grid container direction={'row'}>
-              <Grid sx={{ width: w }}>
-                <canvas
-                  id="canvas"
-                  width={w}
-                  height={h}
-                ></canvas>
-              </Grid>
-              <Grid xs>
-                <Grid container columnGap={3}>
-                  <Grid xs={12}>
-                    <TextField
-                      id="outlined-disabled"
-                      defaultValue="Hello World"
-                      fullWidth
-                    />
-                  </Grid>
-                  <Grid xs={12}>
-                    <TextField
-                      id="outlined-disabled"
-                      defaultValue="Hello World"
-                      fullWidth
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Box>
+          <InnerModal />
         </Modal>
       </Container>
     </>
