@@ -78,8 +78,10 @@ const gradient = (ctx) => {
 
 const drawCircle = (ctx, half, r, offsetx, offsety) => {
   for (let t = 0; t < r * 3; t += 1) {
-    x = Math.round((half + r * Math.cos(t)) / 10) * 10;
-    y = Math.round((half + r * Math.sin(t)) / 10) * 10;
+    const x =
+      Math.round((half + r * Math.cos(t)) / 10) * 10;
+    const y =
+      Math.round((half + r * Math.sin(t)) / 10) * 10;
 
     ctx.fillRect(x + offsetx, y + offsety, 10, 10);
   }
@@ -111,6 +113,56 @@ const circles = (ctx) => {
   }
 };
 
+const floorToTen = (x) => Math.floor(x / 10) * 10;
+
+const drawDiamond = (ctx, half, size, offsetx, offsety) => {
+  for (let x = -size; x <= size; x += 10) {
+    // x = Math.round((half + r * Math.cos(t)) / 10) * 10;
+    // y = Math.round((half + r * Math.sin(t)) / 10) * 10;
+    const y = floorToTen(size / 2 - Math.abs(x));
+
+    ctx.fillRect(x + offsetx, y + offsety, 10, 10);
+    ctx.fillRect(
+      x + offsetx,
+      floorToTen(size - y) + offsety,
+      10,
+      10
+    );
+  }
+};
+
+const diamonds = (ctx) => {
+  const half = w / 2;
+  const ratio = 0.7;
+  const size = half * ratio;
+
+  const unit = 40;
+  for (
+    let offsetx = -unit * 6 - 1;
+    offsetx < unit * 6;
+    offsetx += unit * 2
+  ) {
+    for (
+      let offsety = -unit * 6 - 5;
+      offsety < unit * 6;
+      offsety += unit * 2
+    ) {
+      ctx.fillStyle = hslToHex(
+        offsetx / (w / 100),
+        100,
+        50 - (offsety / h) * 50
+      );
+      drawDiamond(
+        ctx,
+        half,
+        half / 5,
+        offsetx,
+        offsety + 5
+      );
+    }
+  }
+};
+
 const renderCanvas = (args) => {
   setTimeout(() => {
     const canvas = document.getElementById('canvas');
@@ -120,7 +172,7 @@ const renderCanvas = (args) => {
     if ('circles' === args?.type) {
       circles(ctx);
     } else {
-      gradient(ctx);
+      diamonds(ctx);
     }
   });
 };
