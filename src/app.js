@@ -41,6 +41,7 @@ import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 const defaultForm = {
   type: 'Circles',
   light: 50,
+  hue: 0,
 };
 
 const useStore = create((set) => ({
@@ -57,7 +58,10 @@ const useStore = create((set) => ({
     })),
   newForm: () =>
     set((state) => ({
-      form: defaultForm,
+      form: {
+        ...defaultForm,
+        name: 'Picture ' + (state.nextIndex + 1),
+      },
       modals: {
         ...state.modals,
         editBox: true,
@@ -69,7 +73,12 @@ const useStore = create((set) => ({
         return {
           list: {
             ...state.list,
-            [state.form.id]: state.form,
+            [state.form.id]: {
+              ...state.form,
+              image: document
+                .getElementById('canvas')
+                .toDataURL(),
+            },
           },
           modals: {
             ...state.modals,
@@ -83,6 +92,9 @@ const useStore = create((set) => ({
             [state.nextIndex]: {
               ...state.form,
               id: state.nextIndex,
+              image: document
+                .getElementById('canvas')
+                .toDataURL(),
             },
           },
           nextIndex: 1 + state.nextIndex,
@@ -268,12 +280,9 @@ const renderCanvas = (form) => {
 
   const ctx = canvas.getContext('2d');
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  if ('Light' !== form.background) {
-    ctx.fillStyle = 'black';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-  }
+  ctx.fillStyle =
+    'Light' === form.background ? 'white' : 'black';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   types?.[form?.type]?.(ctx, form);
 };
@@ -314,6 +323,32 @@ export function InnerModal() {
           }}
         >
           <div>
+            <div
+              style={{
+                width: w,
+                height: h,
+                position: 'absolute',
+                cursor: 'pointer',
+                opacity: 0,
+                transitionDuration: '0.25s',
+                background: '#00000094',
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+              onClick={() => {
+                download(
+                  form,
+                  document
+                    .getElementById('canvas')
+                    .toDataURL()
+                );
+              }}
+              className="download"
+            >
+              <IconButton style={{ color: 'white' }}>
+                <DownloadIcon sx={{ fontSize: '2rem' }} />
+              </IconButton>
+            </div>
             <canvas
               id="canvas"
               width={w}
@@ -354,7 +389,7 @@ export function InnerModal() {
               />
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">
-                  Type
+                  Shape
                 </InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
@@ -527,6 +562,19 @@ export function ButtonAppBar() {
   );
 }
 
+const download = (item, src) => {
+  var image = document.createElement('a');
+  image.href = src;
+  image.download =
+    item.name.replace(/[^a-zA-Z0-9]/g, '_') + '.png';
+  document.body.appendChild(image);
+  image.click();
+  document.body.removeChild(image);
+};
+
+import DeleteIcon from '@mui/icons-material/Delete';
+import DownloadIcon from '@mui/icons-material/Download';
+
 export function App() {
   const state = useStore((state) => state);
   const editBoxModal = useStore(
@@ -536,6 +584,7 @@ export function App() {
   const update = useStore((state) => state.update);
   const list = useStore((state) => state.list);
   const open = useStore((state) => state.open);
+  const form = useStore((state) => state.form);
 
   const newForm = useStore((state) => state.newForm);
 
@@ -547,18 +596,57 @@ export function App() {
           <ButtonAppBar></ButtonAppBar>
 
           <nav aria-label="main mailbox folders">
-            <List>
+            <List style={{ paddingRight: '1rem' }}>
               {Object.values(list ?? {}).map((item) => (
-                <ListItem disablePadding>
+                <ListItem
+                  secondaryAction={
+                    <div
+                      style={{
+                        display: 'flex',
+                        gap: '1rem',
+                      }}
+                    >
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => {
+                          download(item, item.image);
+                        }}
+                      >
+                        <DownloadIcon />
+                      </IconButton>
+                      {/* <IconButton
+                        edge="end"
+                        aria-label="delete"
+                      >
+                        <DeleteIcon />
+                      </IconButton> */}
+                    </div>
+                  }
+                >
                   <ListItemButton
                     onClick={() => {
                       open(item);
                     }}
                   >
                     <ListItemIcon>
-                      <DraftsIcon />
+                      {/* <DraftsIcon /> */}
+                      <img
+                        src={item.image}
+                        style={{
+                          width: '3rem',
+                          height: '3rem',
+                          border: '1px solid black',
+                          borderRadius: '0.5rem',
+                        }}
+                      />
                     </ListItemIcon>
-                    <ListItemText primary={item.name} />
+                    <ListItemText
+                      style={{
+                        marginLeft: '1rem',
+                      }}
+                      primary={item.name}
+                    />
                   </ListItemButton>
                 </ListItem>
               ))}
