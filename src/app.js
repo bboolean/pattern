@@ -36,6 +36,7 @@ import { styled } from '@mui/material/styles';
 import { create } from 'zustand';
 import { render } from 'react-dom';
 import { TryOutlined } from '@mui/icons-material';
+import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 
 const defaultForm = {
   type: 'Circles',
@@ -117,7 +118,7 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: '50vw',
   bgcolor: 'background.paper',
-  border: '2px solid #000',
+  // border: '2px solid #000',
   boxShadow: 24,
   p: 4,
 };
@@ -279,13 +280,53 @@ export function InnerModal() {
 
   return (
     <Box sx={style} onLoad={() => console.log('a')}>
-      <Grid container direction={'row'}>
-        <Grid sx={{ width: w }}>
-          <canvas id="canvas" width={w} height={h}></canvas>
-        </Grid>
-        <Grid xs>
-          <Grid container columnGap={3}>
-            <Grid xs={12}>
+      <div
+        style={{
+          display: 'flex',
+          gap: '2rem',
+          flexDirection: 'column',
+          justifyContent: 'end',
+          alignContent: 'end',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            gap: '2rem',
+            alignItems: 'center',
+          }}
+        >
+          <div>
+            <canvas
+              id="canvas"
+              width={w}
+              height={h}
+              style={{
+                flexBasis: w + 'px',
+              }}
+            ></canvas>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1rem',
+              flex: '1',
+              overflowY: 'auto',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1rem',
+                flex: '1',
+                overflowY: 'auto',
+                maxHeight: '60vh',
+                paddingTop: '1rem',
+                paddingRight: '1rem',
+              }}
+            >
               <TextField
                 fullWidth
                 label={'Name *'}
@@ -321,32 +362,65 @@ export function InnerModal() {
                   update('form', 'shift', e.target.value)
                 }
               />
-            </Grid>
-            <Grid xs={12}>
               <TextField
-                id="outlined-disabled"
-                defaultValue="Hello World"
                 fullWidth
+                value={form.shift ?? ''}
+                onChange={(e) =>
+                  update('form', 'shift', e.target.value)
+                }
               />
-              {JSON.stringify(state)}{' '}
-              <Button
-                onClick={() => {
-                  update('modals', 'editBox', false);
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={() => {
-                  save();
-                }}
-              >
-                Save
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
+              <TextField
+                fullWidth
+                value={form.shift ?? ''}
+                onChange={(e) =>
+                  update('form', 'shift', e.target.value)
+                }
+              />
+              <TextField
+                fullWidth
+                value={form.shift ?? ''}
+                onChange={(e) =>
+                  update('form', 'shift', e.target.value)
+                }
+              />
+              <TextField
+                fullWidth
+                value={form.shift ?? ''}
+                onChange={(e) =>
+                  update('form', 'shift', e.target.value)
+                }
+              />
+              {/* {JSON.stringify(state)} */}
+            </div>
+          </div>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            gap: '0.5rem',
+            justifyContent: 'end',
+            alignContent: 'end',
+            flex: '1',
+          }}
+        >
+          <Button
+            variant="contained"
+            onClick={() => {
+              save();
+            }}
+          >
+            Save
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              update('modals', 'editBox', false);
+            }}
+          >
+            Cancel
+          </Button>
+        </div>{' '}
+      </div>
     </Box>
   );
 }
@@ -358,15 +432,14 @@ export function ButtonAppBar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
+          {/* <IconButton
             size="large"
             edge="start"
             color="inherit"
             aria-label="menu"
-            // sx={{ mr: 2 }}
           >
             <AddCircleIcon />
-          </IconButton>
+          </IconButton> */}
 
           <Typography
             variant="h6"
@@ -394,6 +467,15 @@ export function ButtonAppBar() {
               <AddCircleIcon />
               {/* </Badge> */}
             </IconButton>{' '}
+            <IconButton
+              size="large"
+              aria-label="show 4 new mails"
+              color="inherit"
+            >
+              {/* <Badge badgeContent={4} color="error"> */}
+              <PhoneAndroidIcon />
+              {/* </Badge> */}
+            </IconButton>
             <IconButton
               size="large"
               aria-label="show 4 new mails"
