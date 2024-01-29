@@ -12,7 +12,13 @@ import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import InboxIcon from '@mui/icons-material/Inbox';
 import DraftsIcon from '@mui/icons-material/Drafts';
-
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -21,7 +27,9 @@ import Select, {
 } from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-
+import GitHubIcon from '@mui/icons-material/GitHub';
+import Badge from '@mui/material/Badge';
+import MailIcon from '@mui/icons-material/Mail';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
@@ -254,6 +262,8 @@ const renderCanvas = (form) => {
   types?.[form?.type]?.(ctx, form);
 };
 
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+
 export function InnerModal() {
   const state = useStore((state) => state);
   const editBoxModal = useStore(
@@ -341,6 +351,65 @@ export function InnerModal() {
   );
 }
 
+export function ButtonAppBar() {
+  const newForm = useStore((state) => state.newForm);
+
+  return (
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            // sx={{ mr: 2 }}
+          >
+            <AddCircleIcon />
+          </IconButton>
+
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1 }}
+          >
+            Patterns
+          </Typography>
+          <Button
+            color="inherit"
+            onClick={() => {
+              newForm();
+            }}
+          >
+            {' '}
+            New
+          </Button>
+          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <IconButton
+              size="large"
+              aria-label="show 4 new mails"
+              color="inherit"
+            >
+              {/* <Badge badgeContent={4} color="error"> */}
+              <AddCircleIcon />
+              {/* </Badge> */}
+            </IconButton>{' '}
+            <IconButton
+              size="large"
+              aria-label="show 4 new mails"
+              color="inherit"
+            >
+              {/* <Badge badgeContent={4} color="error"> */}
+              <GitHubIcon />
+              {/* </Badge> */}
+            </IconButton>
+          </Box>
+        </Toolbar>
+      </AppBar>
+    </Box>
+  );
+}
+
 export function App() {
   const state = useStore((state) => state);
   const editBoxModal = useStore(
@@ -358,13 +427,8 @@ export function App() {
       <CssBaseline />
       <Container maxWidth="lg">
         <Box sx={{ bgcolor: '#cfe8fc', height: '100vh' }}>
-          <Button
-            onClick={() => {
-              newForm();
-            }}
-          >
-            New
-          </Button>
+          <ButtonAppBar></ButtonAppBar>
+
           <nav aria-label="main mailbox folders">
             <List>
               {Object.values(list ?? {}).map((item) => (
