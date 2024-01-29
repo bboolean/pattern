@@ -54,20 +54,35 @@ const useStore = create((set) => ({
       },
     })),
   save: () =>
-    set((state) => ({
-      list: {
-        ...state.list,
-        [state.nextIndex]: {
-          ...state.form,
-          id: state.nextIndex,
-        },
-      },
-      nextIndex: 1 + state.nextIndex,
-      modals: {
-        ...state.modals,
-        editBox: false,
-      },
-    })),
+    set((state) => {
+      if (state.form.id) {
+        return {
+          list: {
+            ...state.list,
+            [state.form.id]: state.form,
+          },
+          modals: {
+            ...state.modals,
+            editBox: false,
+          },
+        };
+      } else {
+        return {
+          list: {
+            ...state.list,
+            [state.nextIndex]: {
+              ...state.form,
+              id: state.nextIndex,
+            },
+          },
+          nextIndex: 1 + state.nextIndex,
+          modals: {
+            ...state.modals,
+            editBox: false,
+          },
+        };
+      }
+    }),
   open: (item) =>
     set((state) => ({
       form: item,
@@ -145,7 +160,7 @@ const drawCircle = (ctx, half, r, offsetx, offsety) => {
   }
 };
 
-const circles = (ctx) => {
+const circles = (ctx, form) => {
   const half = w / 2;
   const ratio = 0.7;
   const size = half * ratio;
@@ -162,7 +177,7 @@ const circles = (ctx) => {
       offsety += unit * 2
     ) {
       ctx.fillStyle = hslToHex(
-        offsetx / (w / 100),
+        (offsetx + (form?.shift ?? 0)) / (w / 100),
         100,
         50 - (offsety / h) * 50
       );
@@ -233,7 +248,10 @@ const renderCanvas = (form) => {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  types?.[form?.type]?.(ctx);
+  ctx.fillStyle = 'black';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  types?.[form?.type]?.(ctx, form);
 };
 
 export function InnerModal() {
@@ -258,30 +276,39 @@ export function InnerModal() {
         <Grid xs>
           <Grid container columnGap={3}>
             <Grid xs={12}>
-              <InputLabel id="demo-simple-select-label">
-                Type
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={form?.type ?? 'Circles'}
-                label="Type"
-                onChange={(e) => {
-                  update('form', 'type', e.target.value);
-                }}
-              >
-                {['Circles', 'Diamonds', 'Crosses'].map(
-                  (t) => (
-                    <MenuItem value={t}>{t}</MenuItem>
-                  )
-                )}
-              </Select>
               <TextField
-                id="outlined-disabled"
-                defaultValue="Hello World"
                 fullWidth
+                label={'Name *'}
+                value={form.name ?? ''}
                 onChange={(e) =>
-                  update('form', 'first', e.target.value)
+                  update('form', 'name', e.target.value)
+                }
+              />
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">
+                  Type
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={form?.type ?? 'Circles'}
+                  label="Type *"
+                  onChange={(e) => {
+                    update('form', 'type', e.target.value);
+                  }}
+                >
+                  {['Circles', 'Diamonds', 'Crosses'].map(
+                    (t) => (
+                      <MenuItem value={t}>{t}</MenuItem>
+                    )
+                  )}
+                </Select>
+              </FormControl>
+              <TextField
+                fullWidth
+                value={form.shift ?? ''}
+                onChange={(e) =>
+                  update('form', 'shift', e.target.value)
                 }
               />
             </Grid>
@@ -322,6 +349,7 @@ export function App() {
   const editField = useStore((state) => state.editField);
   const update = useStore((state) => state.update);
   const list = useStore((state) => state.list);
+  const open = useStore((state) => state.open);
 
   const newForm = useStore((state) => state.newForm);
 
@@ -342,12 +370,14 @@ export function App() {
               {Object.values(list ?? {}).map((item) => (
                 <ListItem disablePadding>
                   <ListItemButton
-                    onClick={() => open(item)}
+                    onClick={() => {
+                      open(item);
+                    }}
                   >
                     <ListItemIcon>
                       <DraftsIcon />
                     </ListItemIcon>
-                    <ListItemText primary={item.type} />
+                    <ListItemText primary={item.name} />
                   </ListItemButton>
                 </ListItem>
               ))}
