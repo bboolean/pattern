@@ -40,6 +40,7 @@ import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 
 const defaultForm = {
   type: 'Circles',
+  light: 50,
 };
 
 const useStore = create((set) => ({
@@ -185,10 +186,22 @@ const circles = (ctx, form) => {
       offsety < unit * 6;
       offsety += unit * 2
     ) {
+      console.log(
+        (form?.light ? form.light : 1) -
+          (offsety / h) * 50 -
+          1
+      );
       ctx.fillStyle = hslToHex(
-        (offsetx + (form?.shift ?? 0)) / (w / 100),
+        (offsetx +
+          (form?.shift ? (form.shift / 100) * 1200 : 0)) /
+          (w / 100),
         100,
-        50 - (offsety / h) * 50
+        Math.min(
+          100,
+          (form?.light ? form.light : 1) -
+            (offsety / h) * 50 -
+            1
+        )
       );
       drawCircle(ctx, half, half / 5, offsetx, offsety);
     }
@@ -257,13 +270,17 @@ const renderCanvas = (form) => {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  ctx.fillStyle = 'black';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  if ('Light' !== form.background) {
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
 
   types?.[form?.type]?.(ctx, form);
 };
 
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+
+import Slider from '@mui/material/Slider';
 
 export function InnerModal() {
   const state = useStore((state) => state);
@@ -322,9 +339,9 @@ export function InnerModal() {
                 gap: '1rem',
                 flex: '1',
                 overflowY: 'auto',
+                overflowX: 'hidden',
                 maxHeight: '60vh',
-                paddingTop: '1rem',
-                paddingRight: '1rem',
+                padding: '1rem',
               }}
             >
               <TextField
@@ -354,41 +371,59 @@ export function InnerModal() {
                     )
                   )}
                 </Select>
+              </FormControl>{' '}
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">
+                  Background
+                </InputLabel>
+                <Select
+                  id="demo-simple-select"
+                  value={form?.background ?? 'Dark'}
+                  label="Background *"
+                  onChange={(e) => {
+                    update(
+                      'form',
+                      'background',
+                      e.target.value
+                    );
+                  }}
+                >
+                  {['Dark', 'Light'].map((t) => (
+                    <MenuItem value={t}>{t}</MenuItem>
+                  ))}
+                </Select>
               </FormControl>
-              <TextField
-                fullWidth
+              <Typography
+                id="track-false-range-slider"
+                gutterBottom
+              >
+                Hue
+              </Typography>
+              <Slider
+                defaultValue={50}
+                aria-label="Default"
+                valueLabelDisplay="auto"
                 value={form.shift ?? ''}
                 onChange={(e) =>
                   update('form', 'shift', e.target.value)
                 }
+                max={100}
               />
-              <TextField
-                fullWidth
-                value={form.shift ?? ''}
+              <Typography
+                id="track-false-range-slider"
+                gutterBottom
+              >
+                Lightness
+              </Typography>
+              <Slider
+                defaultValue={50}
+                aria-label="Default"
+                valueLabelDisplay="auto"
+                value={form.light ?? ''}
                 onChange={(e) =>
-                  update('form', 'shift', e.target.value)
+                  update('form', 'light', e.target.value)
                 }
-              />
-              <TextField
-                fullWidth
-                value={form.shift ?? ''}
-                onChange={(e) =>
-                  update('form', 'shift', e.target.value)
-                }
-              />
-              <TextField
-                fullWidth
-                value={form.shift ?? ''}
-                onChange={(e) =>
-                  update('form', 'shift', e.target.value)
-                }
-              />
-              <TextField
-                fullWidth
-                value={form.shift ?? ''}
-                onChange={(e) =>
-                  update('form', 'shift', e.target.value)
-                }
+                max={100}
               />
               {/* {JSON.stringify(state)} */}
             </div>
