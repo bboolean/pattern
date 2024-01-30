@@ -34,93 +34,17 @@ import MailIcon from '@mui/icons-material/Mail';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
-import { create } from 'zustand';
 import { render } from 'react-dom';
 import AddIcon from '@mui/icons-material/Add';
 import { TryOutlined } from '@mui/icons-material';
 import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DownloadIcon from '@mui/icons-material/Download';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import Slider from '@mui/material/Slider';
 
-const defaultForm = {
-  type: 'Circles',
-  light: 50,
-  hue: 0,
-};
-
-const useStore = create((set) => ({
-  modals: {},
-  form: defaultForm,
-  list: {},
-  nextIndex: 0,
-  phone: false,
-  togglePhone: () =>
-    set((state) => ({
-      phone: !state.phone,
-    })),
-  update: (category, name, value) =>
-    set((state) => ({
-      [category]: {
-        ...state?.[category],
-        [name]: value,
-      },
-    })),
-  newForm: () =>
-    set((state) => ({
-      form: {
-        ...defaultForm,
-        name: 'Picture ' + (state.nextIndex + 1),
-      },
-      modals: {
-        ...state.modals,
-        editBox: true,
-      },
-    })),
-  save: () =>
-    set((state) => {
-      if (state.form.id) {
-        return {
-          list: {
-            ...state.list,
-            [state.form.id]: {
-              ...state.form,
-              image: document
-                .getElementById('canvas')
-                .toDataURL(),
-            },
-          },
-          modals: {
-            ...state.modals,
-            editBox: false,
-          },
-        };
-      } else {
-        return {
-          list: {
-            ...state.list,
-            [state.nextIndex]: {
-              ...state.form,
-              id: state.nextIndex,
-              image: document
-                .getElementById('canvas')
-                .toDataURL(),
-            },
-          },
-          nextIndex: 1 + state.nextIndex,
-          modals: {
-            ...state.modals,
-            editBox: false,
-          },
-        };
-      }
-    }),
-  open: (item) =>
-    set((state) => ({
-      form: item,
-      modals: {
-        ...state.modals,
-        editBox: TryOutlined,
-      },
-    })),
-}));
+import { useStore } from './store.js';
+import { renderCanvas, w, h } from './canvas.js';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor:
@@ -142,161 +66,6 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-
-export default function ButtonUsage() {
-  return <Button variant="contained">Hello world</Button>;
-}
-
-const hslToHex = (h, s, l) => {
-  l /= 100;
-
-  const a = (s * Math.min(l, 1 - l)) / 100;
-  const f = (n) => {
-    const k = (n + h / 30) % 12;
-    const color =
-      l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-    return Math.round(255 * color)
-      .toString(16)
-      .padStart(2, '0');
-  };
-  return `#${f(0)}${f(8)}${f(4)}`;
-};
-
-const w = 10 * 2 ** 5;
-const h = 10 * 2 ** 5;
-
-const gradient = (ctx) => {
-  for (let x = 0; x < w; x += 10) {
-    for (let y = 0; y < h; y += 10) {
-      ctx.fillStyle = hslToHex(
-        x / (w / 100),
-        100,
-        50 - (y / h) * 50
-      );
-      ctx.fillRect(x, y, 10, 10);
-    }
-  }
-};
-
-const drawCircle = (ctx, half, r, offsetx, offsety) => {
-  for (let t = 0; t < r * 3; t += 1) {
-    const x =
-      Math.round((half + r * Math.cos(t)) / 10) * 10;
-    const y =
-      Math.round((half + r * Math.sin(t)) / 10) * 10;
-
-    ctx.fillRect(x + offsetx, y + offsety, 10, 10);
-  }
-};
-
-const circles = (ctx, form) => {
-  const half = w / 2;
-  const ratio = 0.7;
-  const size = half * ratio;
-
-  const unit = 40;
-  for (
-    let offsetx = -unit * 6 - 5;
-    offsetx < unit * 6;
-    offsetx += unit * 2
-  ) {
-    for (
-      let offsety = -unit * 6 - 5;
-      offsety < unit * 6;
-      offsety += unit * 2
-    ) {
-      console.log(
-        (form?.light ? form.light : 1) -
-          (offsety / h) * 50 -
-          1
-      );
-      ctx.fillStyle = hslToHex(
-        (offsetx +
-          (form?.shift ? (form.shift / 100) * 1200 : 0)) /
-          (w / 100),
-        100,
-        Math.min(
-          100,
-          (form?.light ? form.light : 1) -
-            (offsety / h) * 50 -
-            1
-        )
-      );
-      drawCircle(ctx, half, half / 5, offsetx, offsety);
-    }
-  }
-};
-
-const floorToTen = (x) => Math.floor(x / 10) * 10;
-
-const drawDiamond = (ctx, half, size, offsetx, offsety) => {
-  for (let x = -size; x <= size; x += 10) {
-    // x = Math.round((half + r * Math.cos(t)) / 10) * 10;
-    // y = Math.round((half + r * Math.sin(t)) / 10) * 10;
-    const y = floorToTen(size / 2 - Math.abs(x));
-
-    ctx.fillRect(x + offsetx, y + offsety, 10, 10);
-    ctx.fillRect(
-      x + offsetx,
-      floorToTen(size - y) + offsety - size * 2.5,
-      10,
-      10
-    );
-  }
-};
-
-const diamonds = (ctx) => {
-  const half = w / 2;
-  const ratio = 0.7;
-  const size = half * ratio;
-
-  const unit = 40;
-  for (
-    let offsetx = -unit * 6 - 1;
-    offsetx < unit * 6;
-    offsetx += unit * 2
-  ) {
-    for (
-      let offsety = -unit * 6 - 5;
-      offsety < unit * 6;
-      offsety += unit * 2.1
-    ) {
-      ctx.fillStyle = hslToHex(
-        offsetx / (w / 100),
-        100,
-        50 - (offsety / h) * 50
-      );
-      drawDiamond(
-        ctx,
-        half,
-        half / 5,
-        offsetx,
-        offsety + 5
-      );
-    }
-  }
-};
-
-const types = {
-  Circles: circles,
-  Diamonds: diamonds,
-};
-
-const renderCanvas = (form) => {
-  const canvas = document.getElementById('canvas');
-
-  const ctx = canvas.getContext('2d');
-
-  ctx.fillStyle =
-    'Light' === form.background ? 'white' : 'black';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  types?.[form?.type]?.(ctx, form);
-};
-
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-
-import Slider from '@mui/material/Slider';
 
 export function InnerModal() {
   const state = useStore((state) => state);
@@ -573,8 +342,77 @@ const download = (item, src) => {
   document.body.removeChild(image);
 };
 
-import DeleteIcon from '@mui/icons-material/Delete';
-import DownloadIcon from '@mui/icons-material/Download';
+export function PictureList() {
+  const state = useStore((state) => state);
+  const editBoxModal = useStore(
+    (state) => state?.modals?.editBox
+  );
+  const editField = useStore((state) => state.editField);
+  const update = useStore((state) => state.update);
+  const list = useStore((state) => state.list);
+  const open = useStore((state) => state.open);
+  const form = useStore((state) => state.form);
+
+  const newForm = useStore((state) => state.newForm);
+
+  return (
+    <List style={{ paddingRight: '1rem' }}>
+      {Object.values(list ?? {}).map((item) => (
+        <ListItem
+          secondaryAction={
+            <div
+              style={{
+                display: 'flex',
+                gap: '1rem',
+              }}
+            >
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                onClick={() => {
+                  download(item, item.image);
+                }}
+              >
+                <DownloadIcon />
+              </IconButton>
+              {/* <IconButton
+                        edge="end"
+                        aria-label="delete"
+                      >
+                        <DeleteIcon />
+                      </IconButton> */}
+            </div>
+          }
+        >
+          <ListItemButton
+            onClick={() => {
+              open(item);
+            }}
+          >
+            <ListItemIcon>
+              {/* <DraftsIcon /> */}
+              <img
+                src={item.image}
+                style={{
+                  width: '3rem',
+                  height: '3rem',
+                  border: '1px solid black',
+                  borderRadius: '0.5rem',
+                }}
+              />
+            </ListItemIcon>
+            <ListItemText
+              style={{
+                marginLeft: '1rem',
+              }}
+              primary={item.name}
+            />
+          </ListItemButton>
+        </ListItem>
+      ))}
+    </List>
+  );
+}
 
 export function App() {
   const state = useStore((state) => state);
@@ -678,10 +516,7 @@ export function App() {
             </div>
           </div>
         </Box>
-        <Modal
-          open={editBoxModal ?? false}
-          // onClose={() => update('modals', 'editBox', false)}
-        >
+        <Modal open={editBoxModal ?? false}>
           <InnerModal />
         </Modal>
       </Container>
