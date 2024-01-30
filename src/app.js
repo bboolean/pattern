@@ -22,6 +22,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
+import Fab from '@mui/material/Fab';
 import Select, {
   SelectChangeEvent,
 } from '@mui/material/Select';
@@ -35,6 +36,7 @@ import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import { create } from 'zustand';
 import { render } from 'react-dom';
+import AddIcon from '@mui/icons-material/Add';
 import { TryOutlined } from '@mui/icons-material';
 import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 
@@ -49,6 +51,11 @@ const useStore = create((set) => ({
   form: defaultForm,
   list: {},
   nextIndex: 0,
+  phone: false,
+  togglePhone: () =>
+    set((state) => ({
+      phone: !state.phone,
+    })),
   update: (category, name, value) =>
     set((state) => ({
       [category]: {
@@ -497,6 +504,9 @@ export function InnerModal() {
 
 export function ButtonAppBar() {
   const newForm = useStore((state) => state.newForm);
+  const togglePhone = useStore(
+    (state) => state.togglePhone
+  );
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -518,29 +528,15 @@ export function ButtonAppBar() {
           >
             Patterns
           </Typography>
-          <Button
-            color="inherit"
-            onClick={() => {
-              newForm();
-            }}
-          >
-            {' '}
-            New
-          </Button>
+
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton
               size="large"
               aria-label="show 4 new mails"
               color="inherit"
-            >
-              {/* <Badge badgeContent={4} color="error"> */}
-              <AddCircleIcon />
-              {/* </Badge> */}
-            </IconButton>{' '}
-            <IconButton
-              size="large"
-              aria-label="show 4 new mails"
-              color="inherit"
+              onClick={() => {
+                togglePhone();
+              }}
             >
               {/* <Badge badgeContent={4} color="error"> */}
               <PhoneAndroidIcon />
@@ -550,6 +546,11 @@ export function ButtonAppBar() {
               size="large"
               aria-label="show 4 new mails"
               color="inherit"
+              onClick={() => {
+                window.open(
+                  'https://github.com/bboolean/pattern'
+                );
+              }}
             >
               {/* <Badge badgeContent={4} color="error"> */}
               <GitHubIcon />
@@ -591,67 +592,91 @@ export function App() {
   return (
     <>
       <CssBaseline />
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" style={{ height: '100vh' }}>
         <Box sx={{ bgcolor: '#cfe8fc', height: '100vh' }}>
           <ButtonAppBar></ButtonAppBar>
-
-          <nav aria-label="main mailbox folders">
-            <List style={{ paddingRight: '1rem' }}>
-              {Object.values(list ?? {}).map((item) => (
-                <ListItem
-                  secondaryAction={
-                    <div
-                      style={{
-                        display: 'flex',
-                        gap: '1rem',
-                      }}
-                    >
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={() => {
-                          download(item, item.image);
+          <div
+            style={{
+              maxHeight: 'calc(100vh - 64px)',
+              overflowY: 'auto',
+            }}
+          >
+            <nav aria-label="main mailbox folders">
+              <List style={{ paddingRight: '1rem' }}>
+                {Object.values(list ?? {}).map((item) => (
+                  <ListItem
+                    secondaryAction={
+                      <div
+                        style={{
+                          display: 'flex',
+                          gap: '1rem',
                         }}
                       >
-                        <DownloadIcon />
-                      </IconButton>
-                      {/* <IconButton
+                        <IconButton
+                          edge="end"
+                          aria-label="delete"
+                          onClick={() => {
+                            download(item, item.image);
+                          }}
+                        >
+                          <DownloadIcon />
+                        </IconButton>
+                        {/* <IconButton
                         edge="end"
                         aria-label="delete"
                       >
                         <DeleteIcon />
                       </IconButton> */}
-                    </div>
-                  }
-                >
-                  <ListItemButton
-                    onClick={() => {
-                      open(item);
-                    }}
+                      </div>
+                    }
                   >
-                    <ListItemIcon>
-                      {/* <DraftsIcon /> */}
-                      <img
-                        src={item.image}
-                        style={{
-                          width: '3rem',
-                          height: '3rem',
-                          border: '1px solid black',
-                          borderRadius: '0.5rem',
-                        }}
-                      />
-                    </ListItemIcon>
-                    <ListItemText
-                      style={{
-                        marginLeft: '1rem',
+                    <ListItemButton
+                      onClick={() => {
+                        open(item);
                       }}
-                      primary={item.name}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          </nav>
+                    >
+                      <ListItemIcon>
+                        {/* <DraftsIcon /> */}
+                        <img
+                          src={item.image}
+                          style={{
+                            width: '3rem',
+                            height: '3rem',
+                            border: '1px solid black',
+                            borderRadius: '0.5rem',
+                          }}
+                        />
+                      </ListItemIcon>
+                      <ListItemText
+                        style={{
+                          marginLeft: '1rem',
+                        }}
+                        primary={item.name}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </nav>
+            <div
+              style={{
+                paddingTop: '5rem',
+                paddingBottom: '5rem',
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              <Fab
+                color="primary"
+                aria-label="add"
+                onClick={() => {
+                  newForm();
+                }}
+              >
+                <AddIcon />
+              </Fab>
+            </div>
+          </div>
         </Box>
         <Modal
           open={editBoxModal ?? false}
