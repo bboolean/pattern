@@ -45,27 +45,7 @@ import Slider from '@mui/material/Slider';
 
 import { useStore } from './store.js';
 import { renderCanvas, w, h } from './canvas.js';
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor:
-    theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '50vw',
-  bgcolor: 'background.paper',
-  // border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
+import { download } from './download.js';
 
 export function InnerModal() {
   const state = useStore((state) => state);
@@ -81,7 +61,19 @@ export function InnerModal() {
   }, [form]);
 
   return (
-    <Box sx={style} onLoad={() => console.log('a')}>
+    <Box
+      sx={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '50vw',
+        bgcolor: 'background.paper',
+        boxShadow: 24,
+        p: 4,
+      }}
+      onLoad={() => console.log('a')}
+    >
       <div
         style={{
           display: 'flex',
@@ -236,7 +228,6 @@ export function InnerModal() {
                 }
                 max={100}
               />
-              {/* {JSON.stringify(state)} */}
             </div>
           </div>
         </div>
@@ -271,7 +262,7 @@ export function InnerModal() {
   );
 }
 
-export function ButtonAppBar() {
+export function MainAppBar() {
   const newForm = useStore((state) => state.newForm);
   const togglePhone = useStore(
     (state) => state.togglePhone
@@ -281,15 +272,6 @@ export function ButtonAppBar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          {/* <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-          >
-            <AddCircleIcon />
-          </IconButton> */}
-
           <Typography
             variant="h6"
             component="div"
@@ -307,9 +289,7 @@ export function ButtonAppBar() {
                 togglePhone();
               }}
             >
-              {/* <Badge badgeContent={4} color="error"> */}
               <PhoneAndroidIcon />
-              {/* </Badge> */}
             </IconButton>
             <IconButton
               size="large"
@@ -321,9 +301,7 @@ export function ButtonAppBar() {
                 );
               }}
             >
-              {/* <Badge badgeContent={4} color="error"> */}
               <GitHubIcon />
-              {/* </Badge> */}
             </IconButton>
           </Box>
         </Toolbar>
@@ -331,16 +309,6 @@ export function ButtonAppBar() {
     </Box>
   );
 }
-
-const download = (item, src) => {
-  var image = document.createElement('a');
-  image.href = src;
-  image.download =
-    item.name.replace(/[^a-zA-Z0-9]/g, '_') + '.png';
-  document.body.appendChild(image);
-  image.click();
-  document.body.removeChild(image);
-};
 
 export function PictureList() {
   const state = useStore((state) => state);
@@ -360,28 +328,14 @@ export function PictureList() {
       {Object.values(list ?? {}).map((item) => (
         <ListItem
           secondaryAction={
-            <div
-              style={{
-                display: 'flex',
-                gap: '1rem',
+            <IconButton
+              edge="end"
+              onClick={() => {
+                download(item, item.image);
               }}
             >
-              <IconButton
-                edge="end"
-                aria-label="delete"
-                onClick={() => {
-                  download(item, item.image);
-                }}
-              >
-                <DownloadIcon />
-              </IconButton>
-              {/* <IconButton
-                        edge="end"
-                        aria-label="delete"
-                      >
-                        <DeleteIcon />
-                      </IconButton> */}
-            </div>
+              <DownloadIcon />
+            </IconButton>
           }
         >
           <ListItemButton
@@ -389,28 +343,46 @@ export function PictureList() {
               open(item);
             }}
           >
-            <ListItemIcon>
-              {/* <DraftsIcon /> */}
-              <img
-                src={item.image}
-                style={{
-                  width: '3rem',
-                  height: '3rem',
-                  border: '1px solid black',
-                  borderRadius: '0.5rem',
-                }}
-              />
-            </ListItemIcon>
-            <ListItemText
+            <img
+              src={item.image}
               style={{
-                marginLeft: '1rem',
+                width: '3rem',
+                height: '3rem',
+                border: '1px solid black',
+                borderRadius: '0.5rem',
+                marginRight: '1rem',
               }}
-              primary={item.name}
             />
+            <ListItemText primary={item.name} />
           </ListItemButton>
         </ListItem>
       ))}
     </List>
+  );
+}
+
+export function AddButton() {
+  const newForm = useStore((state) => state.newForm);
+
+  return (
+    <div
+      style={{
+        paddingTop: '5rem',
+        paddingBottom: '5rem',
+        display: 'flex',
+        justifyContent: 'center',
+      }}
+    >
+      <Fab
+        color="primary"
+        aria-label="add"
+        onClick={() => {
+          newForm();
+        }}
+      >
+        <AddIcon />
+      </Fab>
+    </div>
   );
 }
 
@@ -425,95 +397,20 @@ export function App() {
   const open = useStore((state) => state.open);
   const form = useStore((state) => state.form);
 
-  const newForm = useStore((state) => state.newForm);
-
   return (
     <>
       <CssBaseline />
       <Container maxWidth="lg" style={{ height: '100vh' }}>
         <Box sx={{ bgcolor: '#cfe8fc', height: '100vh' }}>
-          <ButtonAppBar></ButtonAppBar>
+          <MainAppBar />
           <div
             style={{
               maxHeight: 'calc(100vh - 64px)',
               overflowY: 'auto',
             }}
           >
-            <nav aria-label="main mailbox folders">
-              <List style={{ paddingRight: '1rem' }}>
-                {Object.values(list ?? {}).map((item) => (
-                  <ListItem
-                    secondaryAction={
-                      <div
-                        style={{
-                          display: 'flex',
-                          gap: '1rem',
-                        }}
-                      >
-                        <IconButton
-                          edge="end"
-                          aria-label="delete"
-                          onClick={() => {
-                            download(item, item.image);
-                          }}
-                        >
-                          <DownloadIcon />
-                        </IconButton>
-                        {/* <IconButton
-                        edge="end"
-                        aria-label="delete"
-                      >
-                        <DeleteIcon />
-                      </IconButton> */}
-                      </div>
-                    }
-                  >
-                    <ListItemButton
-                      onClick={() => {
-                        open(item);
-                      }}
-                    >
-                      <ListItemIcon>
-                        {/* <DraftsIcon /> */}
-                        <img
-                          src={item.image}
-                          style={{
-                            width: '3rem',
-                            height: '3rem',
-                            border: '1px solid black',
-                            borderRadius: '0.5rem',
-                          }}
-                        />
-                      </ListItemIcon>
-                      <ListItemText
-                        style={{
-                          marginLeft: '1rem',
-                        }}
-                        primary={item.name}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                ))}
-              </List>
-            </nav>
-            <div
-              style={{
-                paddingTop: '5rem',
-                paddingBottom: '5rem',
-                display: 'flex',
-                justifyContent: 'center',
-              }}
-            >
-              <Fab
-                color="primary"
-                aria-label="add"
-                onClick={() => {
-                  newForm();
-                }}
-              >
-                <AddIcon />
-              </Fab>
-            </div>
+            <PictureList />
+            <AddButton />
           </div>
         </Box>
         <Modal open={editBoxModal ?? false}>

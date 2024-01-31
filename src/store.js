@@ -77,7 +77,7 @@ export const useStore = create((set) => ({
       form: item,
       modals: {
         ...state.modals,
-        editBox: TryOutlined,
+        editBox: true,
       },
     })),
 }));
