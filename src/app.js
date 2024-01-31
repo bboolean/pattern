@@ -55,6 +55,7 @@ export function InnerModal() {
   const form = useStore((state) => state?.form);
   const save = useStore((state) => state?.save);
   const update = useStore((state) => state.update);
+  const phone = useStore((state) => state.phone);
 
   useEffect(() => {
     renderCanvas(form);
@@ -64,13 +65,23 @@ export function InnerModal() {
     <Box
       sx={{
         position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: '50vw',
+        overflowY: 'auto',
         bgcolor: 'background.paper',
         boxShadow: 24,
         p: 4,
+        top: { md: '50%' },
+        left: { md: '50%' },
+        transform: { md: 'translate(-50%, -50%)' },
+        ...(phone
+          ? {
+              width: '390px',
+              height: '844px',
+              maxWidth: '100vw',
+              maxHeight: '100vh',
+            }
+          : {
+              height: { xs: '100vh', md: 'inherit' },
+            }),
       }}
       onLoad={() => console.log('a')}
     >
@@ -88,6 +99,7 @@ export function InnerModal() {
             display: 'flex',
             gap: '2rem',
             alignItems: 'center',
+            flexWrap: 'wrap',
           }}
         >
           <div>
@@ -397,22 +409,62 @@ export function App() {
   const open = useStore((state) => state.open);
   const form = useStore((state) => state.form);
 
+  const phone = useStore((state) => state.phone);
+
   return (
     <>
       <CssBaseline />
-      <Container maxWidth="lg" style={{ height: '100vh' }}>
-        <Box sx={{ bgcolor: '#cfe8fc', height: '100vh' }}>
-          <MainAppBar />
-          <div
+      <Container
+        style={{
+          ...(phone
+            ? {
+                maxWidth: '390px',
+              }
+            : {
+                height: '100vh',
+              }),
+        }}
+        disableGutters={true}
+      >
+        <div
+          style={{
+            height: '100vh',
+            display: 'flex',
+            ...(phone
+              ? {
+                  alignItems: 'center',
+                }
+              : {}),
+          }}
+        >
+          <Box
             style={{
-              maxHeight: 'calc(100vh - 64px)',
-              overflowY: 'auto',
+              background: '#cfe8fc',
+              ...(phone
+                ? {
+                    height: '844px',
+                    maxHeight: '100vh',
+                  }
+                : {}),
+              width: '100%',
+              // display: 'flex',
+              // alignContent: 'center',
             }}
           >
-            <PictureList />
-            <AddButton />
-          </div>
-        </Box>
+            <Box>
+              <MainAppBar />
+              <div
+                style={{
+                  maxHeight: 'calc(100vh - 64px)',
+                  overflowY: 'auto',
+                }}
+              >
+                <PictureList />
+                <AddButton />
+              </div>
+            </Box>
+          </Box>
+        </div>
         <Modal open={editBoxModal ?? false}>
           <InnerModal />
         </Modal>
