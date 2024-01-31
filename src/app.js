@@ -144,18 +144,21 @@ export function InnerModal() {
               flexDirection: 'column',
               gap: '1rem',
               flex: '1',
-              overflowY: 'auto',
             }}
           >
-            <div
-              style={{
+            <Box
+              sx={{
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '1rem',
                 flex: '1',
-                overflowY: 'auto',
-                overflowX: 'hidden',
-                maxHeight: '60vh',
+                overflowY: { xs: 'hidden', md: 'auto' },
+                ...(phone
+                  ? {}
+                  : {
+                      overflowX: 'hidden',
+                      maxHeight: '60vh',
+                    }),
                 padding: '1rem',
               }}
             >
@@ -240,7 +243,7 @@ export function InnerModal() {
                 }
                 max={100}
               />
-            </div>
+            </Box>
           </div>
         </div>
         <div
