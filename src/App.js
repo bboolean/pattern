@@ -1,51 +1,25 @@
-import { useEffect, useState } from 'react';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
+import DownloadIcon from '@mui/icons-material/Download';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Divider from '@mui/material/Divider';
-import TextField from '@mui/material/TextField';
-import InboxIcon from '@mui/icons-material/Inbox';
-import DraftsIcon from '@mui/icons-material/Drafts';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Fab from '@mui/material/Fab';
-import Select, {
-  SelectChangeEvent,
-} from '@mui/material/Select';
-import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import Badge from '@mui/material/Badge';
-import MailIcon from '@mui/icons-material/Mail';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
-import { styled } from '@mui/material/styles';
-import { render } from 'react-dom';
-import AddIcon from '@mui/icons-material/Add';
-import { TryOutlined } from '@mui/icons-material';
-import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
-import DeleteIcon from '@mui/icons-material/Delete';
-import DownloadIcon from '@mui/icons-material/Download';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import Select from '@mui/material/Select';
 import Slider from '@mui/material/Slider';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import { useEffect } from 'react';
 
-import { useStore } from './store.js';
-import { renderCanvas, w, h } from './canvas.js';
+import { h, renderCanvas, w } from './canvas.js';
+import { AddButton } from './components/AddButton.js';
+import { MainAppBar } from './components/MainAppBar.js';
+import { PictureList } from './components/PictureList.js';
 import { download } from './download.js';
+import { useStore } from './store.js';
 
 export function InnerModal() {
   const state = useStore((state) => state);
@@ -280,141 +254,10 @@ export function InnerModal() {
   );
 }
 
-export function MainAppBar() {
-  const newForm = useStore((state) => state.newForm);
-  const togglePhone = useStore(
-    (state) => state.togglePhone
-  );
-
-  return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1 }}
-          >
-            Patterns
-          </Typography>
-
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton
-              size="large"
-              aria-label="show 4 new mails"
-              color="inherit"
-              onClick={() => {
-                togglePhone();
-              }}
-            >
-              <PhoneAndroidIcon />
-            </IconButton>
-            <IconButton
-              size="large"
-              aria-label="show 4 new mails"
-              color="inherit"
-              onClick={() => {
-                window.open(
-                  'https://github.com/bboolean/pattern'
-                );
-              }}
-            >
-              <GitHubIcon />
-            </IconButton>
-          </Box>
-        </Toolbar>
-      </AppBar>
-    </Box>
-  );
-}
-
-export function PictureList() {
-  const state = useStore((state) => state);
-  const editBoxModal = useStore(
-    (state) => state?.modals?.editBox
-  );
-  const editField = useStore((state) => state.editField);
-  const update = useStore((state) => state.update);
-  const list = useStore((state) => state.list);
-  const open = useStore((state) => state.open);
-  const form = useStore((state) => state.form);
-
-  const newForm = useStore((state) => state.newForm);
-
-  return (
-    <List style={{ paddingRight: '1rem' }}>
-      {Object.values(list ?? {}).map((item) => (
-        <ListItem
-          secondaryAction={
-            <IconButton
-              edge="end"
-              onClick={() => {
-                download(item, item.image);
-              }}
-            >
-              <DownloadIcon />
-            </IconButton>
-          }
-        >
-          <ListItemButton
-            onClick={() => {
-              open(item);
-            }}
-          >
-            <img
-              src={item.image}
-              style={{
-                width: '3rem',
-                height: '3rem',
-                border: '1px solid black',
-                borderRadius: '0.2rem',
-                marginRight: '1rem',
-              }}
-            />
-            <ListItemText primary={item.name} />
-          </ListItemButton>
-        </ListItem>
-      ))}
-    </List>
-  );
-}
-
-export function AddButton() {
-  const newForm = useStore((state) => state.newForm);
-
-  return (
-    <div
-      style={{
-        paddingTop: '5rem',
-        paddingBottom: '5rem',
-        display: 'flex',
-        justifyContent: 'center',
-      }}
-    >
-      <Fab
-        color="primary"
-        aria-label="add"
-        onClick={() => {
-          newForm();
-        }}
-      >
-        <AddIcon />
-      </Fab>
-    </div>
-  );
-}
-
 export function App() {
-  const state = useStore((state) => state);
   const editBoxModal = useStore(
     (state) => state?.modals?.editBox
   );
-  const editField = useStore((state) => state.editField);
-  const update = useStore((state) => state.update);
-  const list = useStore((state) => state.list);
-  const open = useStore((state) => state.open);
-  const form = useStore((state) => state.form);
-
   const phone = useStore((state) => state.phone);
 
   return (
