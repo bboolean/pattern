@@ -177,17 +177,20 @@ export function InnerModal() {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={form?.type ?? 'Circles'}
-                  label="Type *"
+                  value={form?.type ?? 'Plus'}
+                  label="Shape *"
                   onChange={(e) => {
                     update('form', 'type', e.target.value);
                   }}
                 >
-                  {['Circles', 'Diamonds', 'Crosses'].map(
-                    (t) => (
-                      <MenuItem value={t}>{t}</MenuItem>
-                    )
-                  )}
+                  {[
+                    'Plus',
+                    'Square',
+                    'Diamond',
+                    'Pixel',
+                  ].map((t) => (
+                    <MenuItem value={t}>{t}</MenuItem>
+                  ))}
                 </Select>
               </FormControl>{' '}
               <FormControl fullWidth>
@@ -364,7 +367,7 @@ export function PictureList() {
                 width: '3rem',
                 height: '3rem',
                 border: '1px solid black',
-                borderRadius: '0.5rem',
+                borderRadius: '0.2rem',
                 marginRight: '1rem',
               }}
             />

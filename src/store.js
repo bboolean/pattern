@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 const defaultForm = {
-  type: 'Circles',
+  type: 'Plus',
   light: 50,
   hue: 0,
 };
@@ -36,7 +36,7 @@ export const useStore = create((set) => ({
     })),
   save: () =>
     set((state) => {
-      if (state.form.id) {
+      if (undefined !== state.form.id) {
         return {
           list: {
             ...state.list,
