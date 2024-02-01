@@ -31,7 +31,7 @@ export function PatternForm() {
           ? {}
           : {
               overflowX: 'hidden',
-              maxHeight: '60vh',
+              maxHeight: { md: '60vh' },
             }),
         padding: '1rem',
       }}
@@ -47,16 +47,16 @@ export function PatternForm() {
       <FormControl fullWidth>
         <InputLabel>Shape</InputLabel>
         <Select
-          value={form?.type ?? 'Plus'}
+          value={form?.shape ?? 'Plus'}
           label="Shape"
           onChange={(e) => {
-            update('form', 'type', e.target.value);
+            update('form', 'shape', e.target.value);
           }}
         >
           {['Plus', 'Square', 'Diamond', 'Pixel'].map(
-            (t) => (
-              <MenuItem key={t} value={t}>
-                {t}
+            (s) => (
+              <MenuItem key={s} value={s}>
+                {s}
               </MenuItem>
             )
           )}
@@ -66,14 +66,14 @@ export function PatternForm() {
         <InputLabel>Background</InputLabel>
         <Select
           value={form?.background ?? 'Dark'}
-          label="Background *"
+          label="Background"
           onChange={(e) => {
             update('form', 'background', e.target.value);
           }}
         >
-          {['Dark', 'Light'].map((t) => (
-            <MenuItem key={t} value={t}>
-              {t}
+          {['Dark', 'Light'].map((bg) => (
+            <MenuItem key={bg} value={bg}>
+              {bg}
             </MenuItem>
           ))}
         </Select>
@@ -83,20 +83,20 @@ export function PatternForm() {
         defaultValue={50}
         aria-label="hue"
         valueLabelDisplay="auto"
-        value={form.shift ?? 0}
+        value={form.hue ?? 0}
         onChange={(e) =>
-          update('form', 'shift', e.target.value)
+          update('form', 'hue', e.target.value)
         }
         max={100}
       />
-      <Typography gutterBottom>Lightness</Typography>
+      <Typography gutterBottom>Brightness</Typography>
       <Slider
         defaultValue={50}
-        aria-label="lightness"
+        aria-label="brightness"
         valueLabelDisplay="auto"
-        value={form.light ?? 50}
+        value={form.brightness ?? 50}
         onChange={(e) =>
-          update('form', 'light', e.target.value)
+          update('form', 'brightness', e.target.value)
         }
         max={100}
       />

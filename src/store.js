@@ -1,9 +1,10 @@
 import { create } from 'zustand';
 
 const defaultForm = {
-  type: 'Plus',
-  light: 50,
+  shape: 'Plus',
+  background: 'Dark',
   hue: 0,
+  brightness: 50,
 };
 
 export const useStore = create((set) => ({

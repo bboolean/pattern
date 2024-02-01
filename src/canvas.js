@@ -157,7 +157,7 @@ const diamond = (ctx, offsetx, offsety) => {
   );
 };
 
-const types = {
+const shapes = {
   Plus: plus,
   Diamond: diamond,
   Square: square,
@@ -165,7 +165,7 @@ const types = {
 };
 
 const drawShapes = (ctx, form) => {
-  const shape = types?.[form?.type];
+  const shape = shapes?.[form?.shape];
 
   const unit = 40;
   for (
@@ -180,12 +180,12 @@ const drawShapes = (ctx, form) => {
     ) {
       ctx.fillStyle = hslToHex(
         (offsetx +
-          (form?.shift ? (form.shift / 100) * 1200 : 0)) /
+          (form?.hue ? (form.hue / 100) * 1200 : 0)) /
           (w / 100),
         100,
         Math.min(
           100,
-          (form?.light ? form.light : 1) -
+          (form?.brightness ? form.brightness : 1) -
             (offsety / h) * 50 +
             9
         )
