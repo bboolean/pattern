@@ -90,34 +90,35 @@ const plus = (ctx, offsetx, offsety) => {
 };
 
 const diamond = (ctx, offsetx, offsety) => {
+  const internalOffsetY = 3 * 10;
   for (let y = 0; y <= 2; y++) {
     ctx.fillRect(
       offsetx - 2 * 10 + y * 10,
-      offsety + y * 10 + 1 * 10,
+      offsety + y * 10 + 1 * 10 + internalOffsetY,
       10,
       10
     );
     ctx.fillRect(
       offsetx + 2 * 10 - y * 10,
-      offsety + y * 10 + 1 * 10,
+      offsety + y * 10 + 1 * 10 + internalOffsetY,
       10,
       10
     );
     ctx.fillRect(
       offsetx - 2 * 10 + y * 10,
-      offsety + y * 10 + 1 * 10,
+      offsety + y * 10 + 1 * 10 + internalOffsetY,
       10,
       10
     );
     ctx.fillRect(
       offsetx - y * 10,
-      offsety + y * 10 - 1 * 10,
+      offsety + y * 10 - 1 * 10 + internalOffsetY,
       10,
       10
     );
     ctx.fillRect(
       offsetx + y * 10,
-      offsety + y * 10 - 1 * 10,
+      offsety + y * 10 - 1 * 10 + internalOffsetY,
       10,
       10
     );
@@ -125,30 +126,35 @@ const diamond = (ctx, offsetx, offsety) => {
   for (let y = 0; y <= 2; y++) {
     ctx.fillRect(
       offsetx - 2 * 10 + y * 10,
-      offsety + y * 10 + 2 * 10,
+      offsety + y * 10 + 2 * 10 + internalOffsetY,
       10,
       10
     );
     ctx.fillRect(
       offsetx + 3 * 10 - y * 10,
-      offsety + y * 10 + 1 * 10,
+      offsety + y * 10 + 1 * 10 + internalOffsetY,
       10,
       10
     );
     ctx.fillRect(
       offsetx + 1 * 10 + y * 10,
-      offsety + y * 10 - 1 * 10,
+      offsety + y * 10 - 1 * 10 + internalOffsetY,
       10,
       10
     );
     ctx.fillRect(
       offsetx - y * 10,
-      offsety + y * 10 - 2 * 10,
+      offsety + y * 10 - 2 * 10 + internalOffsetY,
       10,
       10
     );
   }
-  ctx.fillRect(offsetx - 3 * 10, offsety + 1 * 10, 10, 10);
+  ctx.fillRect(
+    offsetx - 3 * 10,
+    offsety + 1 * 10 + internalOffsetY,
+    10,
+    10
+  );
 };
 
 const types = {
@@ -180,8 +186,8 @@ const drawShapes = (ctx, form) => {
         Math.min(
           100,
           (form?.light ? form.light : 1) -
-            (offsety / h) * 50 -
-            1
+            (offsety / h) * 50 +
+            9
         )
       );
 
