@@ -6,6 +6,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 
 import { useStore } from '../store.js';
+import { download } from '../download.js';
 
 export function PictureList() {
   const list = useStore((state) => state.list);
