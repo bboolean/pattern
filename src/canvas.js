@@ -16,31 +16,11 @@ const hslToHex = (h, s, l) => {
 export const w = 10 * 2 ** 5;
 export const h = 10 * 2 ** 5;
 
-const gradient = (ctx) => {
-  for (let x = 0; x < w; x += 10) {
-    for (let y = 0; y < h; y += 10) {
-      ctx.fillStyle = hslToHex(
-        x / (w / 100),
-        100,
-        50 - (y / h) * 50
-      );
-      ctx.fillRect(x, y, 10, 10);
-    }
-  }
-};
-
 const pixel = (ctx, offsetx, offsety) => {
-  // for (let t = 0; t < r * 3; t += 1) {
-  //   const x =
-  //     Math.round((half + r * Math.cos(t)) / 10) * 10;
-  //   const y =
-  //     Math.round((half + r * Math.sin(t)) / 10) * 10;
-
   ctx.fillRect(offsetx, offsety + 4 * 10, 10, 10);
   ctx.fillRect(offsetx, offsety + 8 * 10, 10, 10);
   ctx.fillRect(offsetx + 4 * 10, offsety + 4 * 10, 10, 10);
   ctx.fillRect(offsetx + 4 * 10, offsety + 8 * 10, 10, 10);
-  // }
 };
 
 const square = (ctx, offsetx, offsety) => {
@@ -179,9 +159,6 @@ const types = {
 };
 
 const drawShapes = (ctx, form) => {
-  const half = w / 2;
-  const ratio = 0.7;
-  const size = half * ratio;
   const shape = types?.[form?.type];
 
   const unit = 40;
@@ -214,7 +191,6 @@ const drawShapes = (ctx, form) => {
       );
 
       shape?.(ctx, offsetx, offsety);
-      // drawCircle(ctx, half, half / 5, offsetx, offsety);
     }
   }
 };
