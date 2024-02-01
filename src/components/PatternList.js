@@ -32,6 +32,7 @@ export function PatternList() {
             onClick={() => {
               open(item);
             }}
+            aria-label="download"
           >
             <img
               src={item.image}

@@ -42,6 +42,9 @@ export const useStore = create((set) => ({
             ...state.list,
             [state.form.id]: {
               ...state.form,
+              name:
+                state.form.name ||
+                'Picture ' + (state.form.id + 1),
               image: document
                 .getElementById('canvas')
                 .toDataURL(),

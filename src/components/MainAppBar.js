@@ -29,7 +29,7 @@ export function MainAppBar() {
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton
               size="large"
-              aria-label="show 4 new mails"
+              aria-label="phone"
               color="inherit"
               onClick={() => {
                 togglePhone();
@@ -39,7 +39,7 @@ export function MainAppBar() {
             </IconButton>
             <IconButton
               size="large"
-              aria-label="show 4 new mails"
+              aria-label="github"
               color="inherit"
               onClick={() => {
                 window.open(

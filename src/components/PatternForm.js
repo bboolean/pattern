@@ -38,7 +38,7 @@ export function PatternForm() {
     >
       <TextField
         fullWidth
-        label={'Name *'}
+        label={'Name'}
         value={form.name ?? ''}
         onChange={(e) =>
           update('form', 'name', e.target.value)
@@ -47,9 +47,8 @@ export function PatternForm() {
       <FormControl fullWidth>
         <InputLabel>Shape</InputLabel>
         <Select
-          id="demo-simple-select"
           value={form?.type ?? 'Plus'}
-          label="Shape *"
+          label="Shape"
           onChange={(e) => {
             update('form', 'type', e.target.value);
           }}
@@ -66,7 +65,6 @@ export function PatternForm() {
       <FormControl fullWidth>
         <InputLabel>Background</InputLabel>
         <Select
-          id="demo-simple-select"
           value={form?.background ?? 'Dark'}
           label="Background *"
           onChange={(e) => {
@@ -80,15 +78,10 @@ export function PatternForm() {
           ))}
         </Select>
       </FormControl>
-      <Typography
-        id="track-false-range-slider"
-        gutterBottom
-      >
-        Hue
-      </Typography>
+      <Typography gutterBottom>Hue</Typography>
       <Slider
         defaultValue={50}
-        aria-label="Default"
+        aria-label="hue"
         valueLabelDisplay="auto"
         value={form.shift ?? 0}
         onChange={(e) =>
@@ -96,15 +89,10 @@ export function PatternForm() {
         }
         max={100}
       />
-      <Typography
-        id="track-false-range-slider"
-        gutterBottom
-      >
-        Lightness
-      </Typography>
+      <Typography gutterBottom>Lightness</Typography>
       <Slider
         defaultValue={50}
-        aria-label="Default"
+        aria-label="lightness"
         valueLabelDisplay="auto"
         value={form.light ?? 50}
         onChange={(e) =>

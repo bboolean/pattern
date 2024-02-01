@@ -35,7 +35,10 @@ export function Canvas() {
         }}
         className="download"
       >
-        <IconButton style={{ color: 'white' }}>
+        <IconButton
+          style={{ color: 'white' }}
+          aria-label="download"
+        >
           <DownloadIcon sx={{ fontSize: '2rem' }} />
         </IconButton>
       </div>
