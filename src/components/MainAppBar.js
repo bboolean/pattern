@@ -23,7 +23,7 @@ export function MainAppBar() {
             component="div"
             sx={{ flexGrow: 1 }}
           >
-            Patterns
+            Pattern
           </Typography>
 
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
