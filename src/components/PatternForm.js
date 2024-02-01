@@ -45,11 +45,8 @@ export function PatternForm() {
         }
       />
       <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">
-          Shape
-        </InputLabel>
+        <InputLabel>Shape</InputLabel>
         <Select
-          labelId="demo-simple-select-label"
           id="demo-simple-select"
           value={form?.type ?? 'Plus'}
           label="Shape *"
@@ -59,15 +56,15 @@ export function PatternForm() {
         >
           {['Plus', 'Square', 'Diamond', 'Pixel'].map(
             (t) => (
-              <MenuItem value={t}>{t}</MenuItem>
+              <MenuItem key={t} value={t}>
+                {t}
+              </MenuItem>
             )
           )}
         </Select>
       </FormControl>{' '}
       <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">
-          Background
-        </InputLabel>
+        <InputLabel>Background</InputLabel>
         <Select
           id="demo-simple-select"
           value={form?.background ?? 'Dark'}
@@ -77,7 +74,9 @@ export function PatternForm() {
           }}
         >
           {['Dark', 'Light'].map((t) => (
-            <MenuItem value={t}>{t}</MenuItem>
+            <MenuItem key={t} value={t}>
+              {t}
+            </MenuItem>
           ))}
         </Select>
       </FormControl>
@@ -91,7 +90,7 @@ export function PatternForm() {
         defaultValue={50}
         aria-label="Default"
         valueLabelDisplay="auto"
-        value={form.shift ?? ''}
+        value={form.shift ?? 0}
         onChange={(e) =>
           update('form', 'shift', e.target.value)
         }
@@ -107,7 +106,7 @@ export function PatternForm() {
         defaultValue={50}
         aria-label="Default"
         valueLabelDisplay="auto"
-        value={form.light ?? ''}
+        value={form.light ?? 50}
         onChange={(e) =>
           update('form', 'light', e.target.value)
         }

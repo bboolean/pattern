@@ -172,11 +172,6 @@ const drawShapes = (ctx, form) => {
       offsety <= unit * 7;
       offsety += unit * 2
     ) {
-      console.log(
-        (form?.light ? form.light : 1) -
-          (offsety / h) * 50 -
-          1
-      );
       ctx.fillStyle = hslToHex(
         (offsetx +
           (form?.shift ? (form.shift / 100) * 1200 : 0)) /

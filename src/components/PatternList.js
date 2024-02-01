@@ -16,6 +16,7 @@ export function PatternList() {
     <List style={{ paddingRight: '1rem' }}>
       {Object.values(list ?? {}).map((item) => (
         <ListItem
+          key={item.id}
           secondaryAction={
             <IconButton
               edge="end"
