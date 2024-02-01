@@ -21,7 +21,26 @@ import { PictureList } from './components/PictureList.js';
 import { download } from './download.js';
 import { useStore } from './store.js';
 
-export function InnerModal() {
+export function Canvas() {
+  const form = useStore((state) => state?.form);
+
+  useEffect(() => {
+    renderCanvas(form);
+  }, [form]);
+
+  return (
+    <canvas
+      id="canvas"
+      width={w}
+      height={h}
+      style={{
+        flexBasis: w + 'px',
+      }}
+    ></canvas>
+  );
+}
+
+export function FormButtons() {
   const state = useStore((state) => state);
   const editBoxModal = useStore(
     (state) => state?.modals?.editBox
@@ -31,9 +50,153 @@ export function InnerModal() {
   const update = useStore((state) => state.update);
   const phone = useStore((state) => state.phone);
 
-  useEffect(() => {
-    renderCanvas(form);
-  }, [form]);
+  return (
+    <div
+      style={{
+        display: 'flex',
+        gap: '0.5rem',
+        justifyContent: 'end',
+        alignContent: 'end',
+        flex: '1',
+      }}
+    >
+      <Button
+        variant="contained"
+        onClick={() => {
+          save();
+        }}
+      >
+        Save
+      </Button>
+      <Button
+        variant="outlined"
+        onClick={() => {
+          update('modals', 'editBox', false);
+        }}
+      >
+        Cancel
+      </Button>
+    </div>
+  );
+}
+
+export function PictureForm() {
+  const state = useStore((state) => state);
+  const editBoxModal = useStore(
+    (state) => state?.modals?.editBox
+  );
+  const form = useStore((state) => state?.form);
+  const save = useStore((state) => state?.save);
+  const update = useStore((state) => state.update);
+  const phone = useStore((state) => state.phone);
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1rem',
+        flex: '1',
+        overflowY: { xs: 'hidden', md: 'auto' },
+        ...(phone
+          ? {}
+          : {
+              overflowX: 'hidden',
+              maxHeight: '60vh',
+            }),
+        padding: '1rem',
+      }}
+    >
+      <TextField
+        fullWidth
+        label={'Name *'}
+        value={form.name ?? ''}
+        onChange={(e) =>
+          update('form', 'name', e.target.value)
+        }
+      />
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">
+          Shape
+        </InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={form?.type ?? 'Plus'}
+          label="Shape *"
+          onChange={(e) => {
+            update('form', 'type', e.target.value);
+          }}
+        >
+          {['Plus', 'Square', 'Diamond', 'Pixel'].map(
+            (t) => (
+              <MenuItem value={t}>{t}</MenuItem>
+            )
+          )}
+        </Select>
+      </FormControl>{' '}
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">
+          Background
+        </InputLabel>
+        <Select
+          id="demo-simple-select"
+          value={form?.background ?? 'Dark'}
+          label="Background *"
+          onChange={(e) => {
+            update('form', 'background', e.target.value);
+          }}
+        >
+          {['Dark', 'Light'].map((t) => (
+            <MenuItem value={t}>{t}</MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <Typography
+        id="track-false-range-slider"
+        gutterBottom
+      >
+        Hue
+      </Typography>
+      <Slider
+        defaultValue={50}
+        aria-label="Default"
+        valueLabelDisplay="auto"
+        value={form.shift ?? ''}
+        onChange={(e) =>
+          update('form', 'shift', e.target.value)
+        }
+        max={100}
+      />
+      <Typography
+        id="track-false-range-slider"
+        gutterBottom
+      >
+        Lightness
+      </Typography>
+      <Slider
+        defaultValue={50}
+        aria-label="Default"
+        valueLabelDisplay="auto"
+        value={form.light ?? ''}
+        onChange={(e) =>
+          update('form', 'light', e.target.value)
+        }
+        max={100}
+      />
+    </Box>
+  );
+}
+
+export function InnerModal() {
+  const state = useStore((state) => state);
+  const editBoxModal = useStore(
+    (state) => state?.modals?.editBox
+  );
+  const form = useStore((state) => state?.form);
+  const save = useStore((state) => state?.save);
+  const update = useStore((state) => state.update);
+  const phone = useStore((state) => state.phone);
 
   return (
     <Box
@@ -103,14 +266,7 @@ export function InnerModal() {
                 <DownloadIcon sx={{ fontSize: '2rem' }} />
               </IconButton>
             </div>
-            <canvas
-              id="canvas"
-              width={w}
-              height={h}
-              style={{
-                flexBasis: w + 'px',
-              }}
-            ></canvas>
+            <Canvas />
           </div>
           <div
             style={{
@@ -120,135 +276,10 @@ export function InnerModal() {
               flex: '1',
             }}
           >
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '1rem',
-                flex: '1',
-                overflowY: { xs: 'hidden', md: 'auto' },
-                ...(phone
-                  ? {}
-                  : {
-                      overflowX: 'hidden',
-                      maxHeight: '60vh',
-                    }),
-                padding: '1rem',
-              }}
-            >
-              <TextField
-                fullWidth
-                label={'Name *'}
-                value={form.name ?? ''}
-                onChange={(e) =>
-                  update('form', 'name', e.target.value)
-                }
-              />
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">
-                  Shape
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={form?.type ?? 'Plus'}
-                  label="Shape *"
-                  onChange={(e) => {
-                    update('form', 'type', e.target.value);
-                  }}
-                >
-                  {[
-                    'Plus',
-                    'Square',
-                    'Diamond',
-                    'Pixel',
-                  ].map((t) => (
-                    <MenuItem value={t}>{t}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>{' '}
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">
-                  Background
-                </InputLabel>
-                <Select
-                  id="demo-simple-select"
-                  value={form?.background ?? 'Dark'}
-                  label="Background *"
-                  onChange={(e) => {
-                    update(
-                      'form',
-                      'background',
-                      e.target.value
-                    );
-                  }}
-                >
-                  {['Dark', 'Light'].map((t) => (
-                    <MenuItem value={t}>{t}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <Typography
-                id="track-false-range-slider"
-                gutterBottom
-              >
-                Hue
-              </Typography>
-              <Slider
-                defaultValue={50}
-                aria-label="Default"
-                valueLabelDisplay="auto"
-                value={form.shift ?? ''}
-                onChange={(e) =>
-                  update('form', 'shift', e.target.value)
-                }
-                max={100}
-              />
-              <Typography
-                id="track-false-range-slider"
-                gutterBottom
-              >
-                Lightness
-              </Typography>
-              <Slider
-                defaultValue={50}
-                aria-label="Default"
-                valueLabelDisplay="auto"
-                value={form.light ?? ''}
-                onChange={(e) =>
-                  update('form', 'light', e.target.value)
-                }
-                max={100}
-              />
-            </Box>
+            <PictureForm />
           </div>
         </div>
-        <div
-          style={{
-            display: 'flex',
-            gap: '0.5rem',
-            justifyContent: 'end',
-            alignContent: 'end',
-            flex: '1',
-          }}
-        >
-          <Button
-            variant="contained"
-            onClick={() => {
-              save();
-            }}
-          >
-            Save
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={() => {
-              update('modals', 'editBox', false);
-            }}
-          >
-            Cancel
-          </Button>
-        </div>{' '}
+        <FormButtons />
       </div>
     </Box>
   );
