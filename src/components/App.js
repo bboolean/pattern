@@ -4,7 +4,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 import { AddButton } from './AddButton.js';
 import { MainAppBar } from './MainAppBar.js';
-import { PictureList } from './PictureList.js';
+import { PatternList } from './PatternList.js';
 import { PatternModal } from './PatternModal.js';
 import { useStore } from '../store.js';
 
@@ -62,7 +62,7 @@ export function App() {
                   overflowY: 'auto',
                 }}
               >
-                <PictureList />
+                <PatternList />
                 <AddButton />
               </div>
             </Box>

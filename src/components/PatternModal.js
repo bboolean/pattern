@@ -8,7 +8,7 @@ import { download } from '../download.js';
 import { useStore } from '../store.js';
 
 import { Canvas } from './Canvas.js';
-import { PictureForm } from './PictureForm.js';
+import { PatternForm } from './PatternForm.js';
 import { FormButtons } from './FormButtons.js';
 
 export function PatternModal() {
@@ -100,7 +100,7 @@ export function PatternModal() {
                 flex: '1',
               }}
             >
-              <PictureForm />
+              <PatternForm />
             </div>
           </div>
           <FormButtons />

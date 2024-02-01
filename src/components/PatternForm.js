@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 
 import { useStore } from '../store.js';
 
-export function PictureForm() {
+export function PatternForm() {
   const state = useStore((state) => state);
   const editBoxModal = useStore(
     (state) => state?.modals?.editBox

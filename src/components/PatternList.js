@@ -8,7 +8,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { useStore } from '../store.js';
 import { download } from '../download.js';
 
-export function PictureList() {
+export function PatternList() {
   const list = useStore((state) => state.list);
   const open = useStore((state) => state.open);
 
