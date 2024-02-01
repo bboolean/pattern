@@ -62,7 +62,7 @@ export function PatternForm() {
             )
           )}
         </Select>
-      </FormControl>{' '}
+      </FormControl>
       <FormControl fullWidth>
         <InputLabel>Background</InputLabel>
         <Select

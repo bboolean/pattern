@@ -5,8 +5,8 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 
-import { useStore } from '../store.js';
 import { download } from '../download.js';
+import { useStore } from '../store.js';
 
 export function PatternList() {
   const list = useStore((state) => state.list);
