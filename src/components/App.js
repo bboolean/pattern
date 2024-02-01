@@ -19,7 +19,7 @@ export function App() {
       <CssBaseline />
       <Container
         sx={{
-          height: '100vh',
+          height: '100svh',
           display: 'flex',
           ...(phone
             ? {
@@ -38,7 +38,7 @@ export function App() {
             ...(phone
               ? {
                   height: '844px',
-                  maxHeight: '100vh',
+                  maxHeight: '100svh',
                   maxWidth: '390px',
                 }
               : {}),
@@ -47,7 +47,7 @@ export function App() {
           <MainAppBar />
           <Box
             sx={{
-              maxHeight: 'calc(100vh - 64px)',
+              maxHeight: 'calc(100svh - 64px)',
               overflowY: 'auto',
             }}
           >

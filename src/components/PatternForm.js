@@ -31,7 +31,7 @@ export function PatternForm() {
           ? {}
           : {
               overflowX: 'hidden',
-              maxHeight: { md: '60vh' },
+              maxHeight: { md: '60svh' },
             }),
         padding: '1rem',
       }}

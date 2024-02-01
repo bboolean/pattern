@@ -29,14 +29,14 @@ export function PatternModal() {
           top: { lg: '50%' },
           left: { lg: '50%' },
           transform: { lg: 'translate(-50%, -50%)' },
-          height: { xs: '100vh', lg: 'inherit' },
+          height: { xs: '100svh', lg: 'inherit' },
           width: { xs: '100vw', lg: 'inherit' },
           ...(phone
             ? {
                 width: '390px',
                 height: '844px',
                 maxWidth: '100vw',
-                maxHeight: '100vh',
+                maxHeight: '100svh',
               }
             : {}),
         }}
