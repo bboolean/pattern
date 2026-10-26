@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 
+// The default form for the pattern image form.
 const defaultForm = {
   shape: 'Plus',
   background: 'Dark',
@@ -7,6 +8,7 @@ const defaultForm = {
   brightness: 50,
 };
 
+// The entire state for this React app.
 export const useStore = create((set) => ({
   modals: {},
   form: defaultForm,
