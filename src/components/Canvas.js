@@ -6,6 +6,10 @@ import { h, renderCanvas, w } from '../canvas.js';
 import { download } from '../download.js';
 import { useStore } from '../store.js';
 
+/**
+ * The canvas that the pattern image is displayed on.
+ * @returns {React.ReactElement}
+ */
 export function Canvas() {
   const form = useStore((state) => state?.form);
 
