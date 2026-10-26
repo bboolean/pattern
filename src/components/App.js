@@ -8,6 +8,10 @@ import { MainAppBar } from './MainAppBar.js';
 import { PatternList } from './PatternList.js';
 import { PatternModal } from './PatternModal.js';
 
+/**
+ * The main app.
+ * @returns {React.ReactElement}
+ */
 export function App() {
   const editBoxModal = useStore(
     (state) => state?.modals?.editBox
