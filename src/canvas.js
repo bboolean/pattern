@@ -188,6 +188,7 @@ const diamond = (ctx, offsetx, offsety) => {
   );
 };
 
+// All the possible shapes for a pattern image.
 const shapes = {
   Plus: plus,
   Diamond: diamond,
@@ -195,6 +196,15 @@ const shapes = {
   Pixel: pixel,
 };
 
+/**
+ * Draw a specific shape repeatedly across a canvas.
+ * @param {CanvasRenderingContext2D} ctx The canvas context.
+ * @param {Obect} form The object that describes the pattern image.
+ * @param {string} form.shape The shape of the pattern.
+ * @param {('Light'|'Dark')} form.background Whether the background is light or dark
+ * @param {number} form.hue The hue of the shapes.
+ * @param {number} form.brightness The brightness of the shapes.
+ */
 const drawShapes = (ctx, form) => {
   const shape = shapes?.[form?.shape];
 
@@ -227,6 +237,14 @@ const drawShapes = (ctx, form) => {
   }
 };
 
+/**
+ * Render the pattern image on the canvas.
+ * @param {Obect} form The object that describes the pattern image.
+ * @param {string} form.shape The shape of the pattern.
+ * @param {('Light'|'Dark')} form.background Whether the background is light or dark
+ * @param {number} form.hue The hue of the shapes.
+ * @param {number} form.brightness The brightness of the shapes.
+ */
 export const renderCanvas = (form) => {
   const canvas = document.getElementById('canvas');
 
