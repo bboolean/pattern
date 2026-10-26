@@ -1,8 +1,11 @@
 import AddIcon from '@mui/icons-material/Add';
 import Fab from '@mui/material/Fab';
-
 import { useStore } from '../store.js';
 
+/**
+ * Circular plus button that prompts the user to make a new pattern image.
+ * @returns {React.ReactElement}
+ */
 export function AddButton() {
   const newForm = useStore((state) => state.newForm);
 
