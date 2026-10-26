@@ -8,6 +8,10 @@ import Typography from '@mui/material/Typography';
 
 import { useStore } from '../store.js';
 
+/**
+ * The app bar at the top of the window.
+ * @returns {React.ReactElement}
+ */
 export function MainAppBar() {
   const newForm = useStore((state) => state.newForm);
   const togglePhone = useStore(
