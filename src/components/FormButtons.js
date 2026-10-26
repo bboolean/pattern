@@ -2,6 +2,10 @@ import Button from '@mui/material/Button';
 
 import { useStore } from '../store.js';
 
+/**
+ * The buttons at the bottom of the form for pattern images.
+ * @returns {React.ReactElement}
+ */
 export function FormButtons() {
   const state = useStore((state) => state);
   const editBoxModal = useStore(
