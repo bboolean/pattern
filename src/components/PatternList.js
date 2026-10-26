@@ -8,6 +8,10 @@ import ListItemText from '@mui/material/ListItemText';
 import { download } from '../download.js';
 import { useStore } from '../store.js';
 
+/**
+ * The main list of pattern images.
+ * @returns {React.ReactElement}
+ */
 export function PatternList() {
   const list = useStore((state) => state.list);
   const open = useStore((state) => state.open);
