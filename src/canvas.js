@@ -1,3 +1,10 @@
+/**
+ * Convert hsl to hex (e.g. hsl(0 0% 100%) to #ffffff)
+ * @param {number} h The hue (0-360)
+ * @param {number} s The saturation (0-100)
+ * @param {number} l The lightness (0-100)
+ * @returns {string} E.g. '#ffffff'
+ */
 const hslToHex = (h, s, l) => {
   l /= 100;
 
@@ -16,6 +23,12 @@ const hslToHex = (h, s, l) => {
 export const w = 10 * 2 ** 5;
 export const h = 10 * 2 ** 5;
 
+/**
+ * The "Pixel" shape that is to be placed multiple times by drawShapes()
+ * @param {CanvasRenderingContext2D} ctx The canvas context.
+ * @param {number} offsetx The x offset to place the shape.
+ * @param {number} offsety The y offset to place the shape.
+ */
 const pixel = (ctx, offsetx, offsety) => {
   ctx.fillRect(offsetx, offsety + 4 * 10, 10, 10);
   ctx.fillRect(offsetx, offsety + 8 * 10, 10, 10);
@@ -23,6 +36,12 @@ const pixel = (ctx, offsetx, offsety) => {
   ctx.fillRect(offsetx + 4 * 10, offsety + 8 * 10, 10, 10);
 };
 
+/**
+ * The "Square" shape that is to be placed multiple times by drawShapes()
+ * @param {CanvasRenderingContext2D} ctx The canvas context.
+ * @param {number} offsetx The x offset to place the shape.
+ * @param {number} offsety The y offset to place the shape.
+ */
 const square = (ctx, offsetx, offsety) => {
   for (let y = -3; y <= 3; y++) {
     ctx.fillRect(
@@ -54,6 +73,12 @@ const square = (ctx, offsetx, offsety) => {
   }
 };
 
+/**
+ * The "Plus" shape that is to be placed multiple times by drawShapes()
+ * @param {CanvasRenderingContext2D} ctx The canvas context.
+ * @param {number} offsetx The x offset to place the shape.
+ * @param {number} offsety The y offset to place the shape.
+ */
 const plus = (ctx, offsetx, offsety) => {
   for (let y = -2; y <= 2; y++) {
     ctx.fillRect(
@@ -89,6 +114,12 @@ const plus = (ctx, offsetx, offsety) => {
   ctx.fillRect(offsetx + 2 * 10, offsety + 2 * 10, 10, 10);
 };
 
+/**
+ * The "Diamond" shape that is to be placed multiple times by drawShapes()
+ * @param {CanvasRenderingContext2D} ctx The canvas context.
+ * @param {number} offsetx The x offset to place the shape.
+ * @param {number} offsety The y offset to place the shape.
+ */
 const diamond = (ctx, offsetx, offsety) => {
   const internalOffsetY = 3 * 10;
   for (let y = 0; y <= 2; y++) {
