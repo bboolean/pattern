@@ -7,6 +7,10 @@ import { Canvas } from './Canvas.js';
 import { FormButtons } from './FormButtons.js';
 import { PatternForm } from './PatternForm.js';
 
+/**
+ * The modal that holds the pattern images form.
+ * @returns {React.ReactElement}
+ */
 export function PatternModal() {
   const state = useStore((state) => state);
   const editBoxModal = useStore(
