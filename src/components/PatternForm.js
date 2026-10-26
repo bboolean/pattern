@@ -9,6 +9,10 @@ import Typography from '@mui/material/Typography';
 
 import { useStore } from '../store.js';
 
+/**
+ * The form for creating and updating pattern images.
+ * @returns {React.ReactElement}
+ */
 export function PatternForm() {
   const state = useStore((state) => state);
   const editBoxModal = useStore(
